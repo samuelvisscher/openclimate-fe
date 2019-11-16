@@ -12,32 +12,30 @@ import { withSnackbar } from "notistack";
 
 class ReviewContent extends Component {
   state = {
-    item: {},
+    actor: (this.props.actors || []).find(x => x.id === +this.props.data.id),
     loading: false,
     error: null
   };
 
-  componentDidMount() {
-    this.fetchContent();
-  }
-
   componentDidUpdate(prevProps, prevState, snapshot) {
-    if (this.props.data.id !== prevProps.data.id || this.props.data.category !== prevProps.data.category) {
-      this.fetchContent();
+    if (this.props.data.id !== prevProps.data.id
+      || this.props.data.category !== prevProps.data.category
+      || (this.props.actors || []).length !== (prevProps.actors || []).length
+    ) {
+      this.setState({ actor: (this.props.actors || []).find(x => x.id === +this.props.data.id) });
     }
   }
 
-  fetchContent = () => {
-    this.props.fetchExploreReview(this.props.data.category, this.props.data.id);
-  };
-
-
   render() {
-    if(this.props.error) {
+    if (this.props.error) {
       this.props.enqueueSnackbar(this.props.error, {
-        variant: 'error',
-        autoHideDuration: 1500,
+        variant: "error",
+        autoHideDuration: 1500
       });
+      return "";
+    }
+
+    if (!this.state.actor) {
       return "";
     }
 
@@ -48,7 +46,7 @@ class ReviewContent extends Component {
             <img src={TempImage} alt=""/>
           </div>
           <div className="rh-description">
-            <h3>{this.props.content.name}</h3>
+            <h3>{this.state.actor.name}</h3>
             <p>Region</p>
           </div>
         </div>
@@ -79,7 +77,8 @@ class ReviewContent extends Component {
               <div className="image">
                 <img src={ClimateData} alt="climate"/>
               </div>
-              <div className="description --light">The diagram represents what % of climate actions can be directly tracked
+              <div className="description --light">The diagram represents what % of climate actions can be directly
+                tracked
                 through verifiable MRV methods and linked devices, versus those that have been reported but have no
                 trackable link.
               </div>
@@ -120,13 +119,7 @@ class ReviewContent extends Component {
 const mapStateToProps = state => ({
   error: state.explore.review.selected.error,
   loading: state.explore.review.selected.isLoading,
-  content: state.explore.review.selected.item
+  actors: state.explore.review.actors
 });
 
-const mapDispatchToProps = dispatch =>
-  bindActionCreators({ fetchExploreReview }, dispatch);
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(withSnackbar(ReviewContent));
+export default connect(mapStateToProps)(withSnackbar(ReviewContent));
