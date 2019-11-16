@@ -10,9 +10,8 @@ export const fetchExploreReview = payload => ({
   payload
 });
 
-export const fetchExploreReviewSuccess = (name, data) => ({
+export const fetchExploreReviewSuccess = (data) => ({
   type: EXPLORE_REVIEW_SUCCESS,
-  name,
   data
 });
 
@@ -24,14 +23,4 @@ export const fetchExploreReviewFailure = message => ({
 export const fetchExploreReviewData = (path, id) => ({
   type: EXPLORE_REVIEW_DATA,
   path, id
-});
-
-export const fetchExploreReviewDataSuccess = (data) => ({
-  type: EXPLORE_REVIEW_DATA_SUCCESS,
-  data
-});
-
-export const fetchExploreReviewDataFailure = message => ({
-  type: EXPLORE_REVIEW_DATA_FAILURE,
-  payload: message
 });

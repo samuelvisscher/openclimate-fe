@@ -33,7 +33,7 @@ const Card = ({ title, itemIndex, selected, list, subCards, open, handleOpen, ha
             />
           ))}
           {!!list && list.map((item, i) => (
-            <List key={i} title={item.name} index={item.Index} parent={itemIndex} active={item.name == selected}/>
+            <List key={i} title={item.name} index={item.id} parent={itemIndex} active={item.name == selected}/>
           ))}
         </div>
       </AnimateHeight>

@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import { fetchExploreReviewData } from "../../../store/actions";
+import { fetchExploreReview } from "../../../store/actions";
 import "./Content.scss";
 import TempImage from "../../../../../assets/images/temp/tempimage.png";
 import WorldMap from "../../../../../assets/images/temp/world-map.jpg";
@@ -28,7 +28,7 @@ class ReviewContent extends Component {
   }
 
   fetchContent = () => {
-    this.props.fetchExploreReviewData(this.props.data.category, this.props.data.id);
+    this.props.fetchExploreReview(this.props.data.category, this.props.data.id);
   };
 
 
@@ -124,7 +124,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch =>
-  bindActionCreators({ fetchExploreReviewData }, dispatch);
+  bindActionCreators({ fetchExploreReview }, dispatch);
 
 export default connect(
   mapStateToProps,

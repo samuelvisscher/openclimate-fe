@@ -6,16 +6,11 @@ import { fetchExploreReview } from "../../store/actions";
 import ReviewContent from "./Content/Content";
 import "./Review.scss";
 
-const queryString = require("query-string");
-
 class Review extends React.PureComponent {
   state = {
     nation_states: [],
     multinationals: [],
-    current: {
-      category: this.props.match.params.category,
-      id: this.props.match.params.id
-    },
+    current: null,
     error: "",
     loading: false
   };
@@ -23,13 +18,8 @@ class Review extends React.PureComponent {
   componentDidMount() {
     this.props.fetchExploreReview();
     let params = this.props.match.params;
-    if (params.category && params.id) {
-      this.setState({
-        current: {
-          category: params.category,
-          id: params.id,
-        }
-      });
+    if (params.id) {
+      this.setActorFromId();
     }
   }
 
@@ -45,32 +35,40 @@ class Review extends React.PureComponent {
         multinationals: this.props.multinationals
       });
     }
-    if (this.props.match.params.id !== prevProps.match.params.id) {
+    if (this.props.actors !== prevProps.actors) {
       this.setState({
-        current: {
-          category: this.props.match.params.category,
-          id: this.props.match.params.id
-        }
-      });
+        actors: this.props.actors
+      }, this.setActorFromId);
     }
+    if (this.props.match.params.id !== prevProps.match.params.id) {
+      this.setActorFromId();
+    }
+  };
+
+  setActorFromId = () => {
+    this.setState({
+      current: (this.props.actors || []).find(x => x.id === +this.props.match.params.id),
+    });
   };
 
   render() {
     const { nation_states, current } = this.state;
     const sorted = [
-      ...nation_states.filter(x => x.Index === 63),
-      ...nation_states.sort((a, b) => a.name < b.name ? -1 : 1).filter(x => x.Index !== 63)
+      ...nation_states.filter(x => x.id === 63),
+      ...nation_states.sort((a, b) => a.name < b.name ? -1 : 1).filter(x => x.id !== 63)
     ];
 
     const data = [
       {
         index: "nation-states",
         title: "Nation State",
+        type: 1,
         list: sorted,
       },
       {
         index: "multinationals",
         title: "Multinationals",
+        type: 2,
         subCards: [
           { name: "Carbon majors", list: [{ name: "No Data", Index: 0 }] },
           { name: "Other Mnc", list: [{ name: "No Data", Index: 0 }] },
@@ -84,7 +82,7 @@ class Review extends React.PureComponent {
           <SideContentMenu menu={data} current={current}/>
         </div>
         <div className="-content">
-          {current.id && <ReviewContent data={current}/>}
+          {!!current && <ReviewContent data={current}/>}
         </div>
       </div>
     );
@@ -94,6 +92,7 @@ class Review extends React.PureComponent {
 const mapStateToProps = state => ({
   error: state.explore.review.error,
   loading: state.explore.review.isLoading,
+  actors: state.explore.review.actors,
   nation_states: state.explore.review.nation_states,
   multinationals: state.explore.review.multinationals
 });

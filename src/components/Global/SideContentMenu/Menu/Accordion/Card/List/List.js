@@ -6,6 +6,7 @@ import ROUTES from "../../../../../../../routes/routes";
 
 const List = ({ title, index, parent, active }) => {
   const handleRedirect = () => {
+    console.log(parent);
     // todo: remove this when the API route exists
     parent = index > 1000 ? 'nation-states' : parent;
     index = index > 1000 ? 63 : index;

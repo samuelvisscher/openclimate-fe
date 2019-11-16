@@ -2,10 +2,10 @@ import React, { useState, useEffect  } from "react";
 import "./Accordion.scss";
 import Card from "./Card/Card";
 
-const Accordion = ({ data = [], current}) => {
+const Accordion = ({ data = [], current = null}) => {
   const [openIndex, setOpen] = useState(null);
   useEffect(() => {
-    setOpen(current.category);
+    setOpen(current ? current.type : null);
   }, [current]);
 
   let content;
@@ -14,10 +14,10 @@ const Accordion = ({ data = [], current}) => {
       <Card
         key={item.index}
         itemIndex={item.index}
-        selected={current.id}
+        selected={current ? current.id : null}
         title={item.title}
-        open={openIndex === item.index}
-        handleOpen={() => setOpen(item.index)}
+        open={openIndex === item.type}
+        handleOpen={() => setOpen(item.type)}
         handleClose={() => setOpen(null)}
         list={item.list ? item.list : null}
         subCards={item.subCards ? item.subCards : null}
